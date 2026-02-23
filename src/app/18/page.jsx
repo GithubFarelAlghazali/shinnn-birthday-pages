@@ -4,6 +4,38 @@ import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FaArrowDown } from "react-icons/fa";
 
+const fileNames = [
+	"image (13).jpg",
+	"IMG_20250712_131004.jpg",
+	"IMG_20250712_140823.jpg",
+	"IMG_20250712_140830.jpg",
+	"IMG_20250822_161128.jpg",
+	"IMG_20251230_120029.jpg",
+	"IMG_20251230_120036.jpg",
+	"IMG_20251230_120041.jpg",
+	"IMG_20251230_120043.jpg",
+	"IMG_20260123_073048_251.jpg",
+	"IMG_20260131_140630.jpg",
+	"IMG_20260131_140642.jpg",
+	"IMG_20260131_140659.jpg",
+	"IMG_20260131_140714.jpg",
+	"IMG_20260204_191429_507.jpg",
+	"IMG_20260222_150335_610.jpg",
+	"IMG_20260222_150338_655.jpg",
+	"IMG_20260222_150344_191.jpg",
+	"IMG_20260222_150401_541.jpg",
+	"IMG_20260222_150427_844.jpg",
+	"IMG-20250730-WA0004.jpg",
+	"IMG-20251013-WA0029.jpg",
+	"IMG-20251018-WA0001.jpg",
+	"IMG-20251116-WA0001.jpg",
+	"IMG-20251119-WA0007.jpg",
+	"IMG-20251130-WA0018.jpg",
+	"IMG-20260120-WA0000.jpg",
+	"Screenshot_20251223_175954.jpg",
+	"Screenshot_20260113_102329.jpg",
+];
+
 const fadeUp = {
 	hidden: {
 		y: 10,
@@ -19,6 +51,20 @@ const fadeUp = {
 	},
 };
 
+const brightUp = {
+	hidden: {
+		filter: "grayscale(100%)",
+		opacity: 0.2,
+	},
+	visible: {
+		filter: "grayscale(0%)",
+		opacity: 1,
+		transition: {
+			duration: 0.5,
+		},
+	},
+};
+
 export default function Page18() {
 	const [showModal, setShowModal] = useState(true);
 
@@ -29,7 +75,7 @@ export default function Page18() {
 	};
 
 	return (
-		<main className="w-screen font-lexendeca">
+		<main className="w-full  font-lexendeca">
 			{/* Play Music */}
 			<section className="h-screen relative">
 				<AnimatePresence mode="wait">
@@ -57,6 +103,17 @@ export default function Page18() {
 						</motion.div>
 					)}
 				</AnimatePresence>
+			</section>
+
+			{/* Photo montage */}
+			<section className="h-[500vh] relative">
+				{fileNames.map((file, i) => {
+					if (i % 2 == 0) {
+						return <motion.img variants={brightUp} initial="hidden" whileInView="visible" viewport={{ amount: 1 }} src={`/images/18/${file}`} key={i} className="mr-10 ml-auto w-56 rounded-md " />;
+					} else {
+						return <motion.img variants={brightUp} initial="hidden" whileInView="visible" viewport={{ amount: 1 }} src={`/images/18/${file}`} key={i} className="ml-10 mr-auto w-56 rounded-md" />;
+					}
+				})}
 			</section>
 		</main>
 	);
