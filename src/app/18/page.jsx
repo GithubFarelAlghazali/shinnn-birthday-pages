@@ -12,7 +12,7 @@ const ArrowDownIcon = ({ className }) => (
 // --- KOMPONEN HALAMAN MODULAR ---
 const CoverPage = ({ title, subtitle }) => (
 	<div className="w-full h-full flex flex-col items-center justify-center bg-rose-100 text-rose-900 p-4 border-8 border-rose-200">
-		<h3 className="text-xl md:text-3xl font-bold font-serif text-center mb-2 whitespace-pre-line">{title}</h3>
+		<h3 className="text-xl md:text-3xl font-bold  text-center mb-2 whitespace-pre-line">{title}</h3>
 		<p className="text-xs md:text-sm mt-4 text-rose-700 italic">{subtitle}</p>
 	</div>
 );
@@ -28,20 +28,20 @@ const PhotoPage = ({ src, caption }) => (
 		<div className="w-full h-36 md:h-64 bg-gray-200 overflow-hidden rounded mb-3">
 			<img src={src} alt={caption} className="w-full h-full object-cover" />
 		</div>
-		<p className="text-xs md:text-sm text-gray-500 italic font-serif text-center">{caption}</p>
+		<p className="text-xs md:text-sm text-gray-500 italic  text-center">{caption}</p>
 	</div>
 );
 
 const MessagePage = ({ title, text }) => (
 	<div className="w-full h-full p-6 flex flex-col items-center justify-center bg-rose-50 text-rose-900 text-center">
-		<h3 className="text-2xl md:text-3xl font-bold mb-4 font-serif">{title}</h3>
+		<h3 className="text-2xl md:text-3xl font-bold mb-4 ">{title}</h3>
 		<p className="text-sm md:text-base italic">{text}</p>
 	</div>
 );
 
 const EndPage = ({ text }) => (
 	<div className="w-full h-full flex flex-col items-center justify-center bg-rose-200 border-8 border-rose-300">
-		<p className="text-rose-800 font-bold font-serif text-lg">{text}</p>
+		<p className="text-rose-800 font-bold  text-lg">{text}</p>
 	</div>
 );
 
@@ -70,7 +70,7 @@ const RenderPage = ({ data }) => {
 const bookSheets = [
 	{
 		id: 1,
-		front: { type: "cover", title: "Shinta\ndalam Kamera", subtitle: "Buka untuk melihat" },
+		front: { type: "cover", title: "Shinta\ndalam Kamera", subtitle: "Klik untuk buka album" },
 		back: { type: "text", text: '"Setiap foto dengan kamu di dalamnya, merupakan keindahan yang tak terhingga.."' },
 	},
 	{
@@ -120,7 +120,7 @@ const bookSheets = [
 	},
 	{
 		id: 11,
-		front: { type: "end", text: "~ The End ~" },
+		front: { type: "end", text: "Ada pesan khusus di bawah" },
 		back: { type: "blank", bg: "bg-rose-300" },
 	},
 ];
@@ -136,6 +136,7 @@ export default function BirthdayCake() {
 	const [isFullyLit, setIsFullyLit] = useState(false);
 	const [instructionStep, setInstructionStep] = useState("scroll");
 	const [currentPage, setCurrentPage] = useState(0);
+	const [isLetterOpen, setIsLetterOpen] = useState(false);
 
 	const audioRef = useRef(null);
 	const cakeContainerRef = useRef(null);
@@ -183,7 +184,7 @@ export default function BirthdayCake() {
 	});
 
 	return (
-		<div className="bg-slate-950 font-sans">
+		<div className="bg-slate-950 font-lexendeca">
 			{/* Cake Section */}
 			<main ref={cakeContainerRef} className="relative h-[500vh]">
 				<audio ref={audioRef} src="/audio/Monokrom.mp3" preload="auto" loop />
@@ -305,55 +306,156 @@ export default function BirthdayCake() {
 
 			{/* Book Gallery Section */}
 			{isBlownOut && (
-				<section className="relative min-h-screen bg-slate-900 flex flex-col items-center justify-center py-24 overflow-hidden z-10 border-t border-slate-800">
-					<motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-3xl md:text-5xl font-bold text-slate-200 mb-12 text-center font-serif tracking-wide">
-						Galeri Kenangan
-					</motion.h2>
+				<>
+					<section className="relative min-h-screen bg-slate-900 flex flex-col items-center justify-center py-24 overflow-hidden z-10 border-t border-slate-800">
+						<motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-3xl md:text-5xl font-bold text-slate-200 mb-12 text-center  tracking-wide">
+							Album Foto
+						</motion.h2>
 
-					{/* Container Utama Buku */}
-					<div className="relative w-[300px] md:w-[600px] h-[220px] md:h-[400px] flex justify-center items-center" style={{ perspective: "1500px" }}>
-						{/* Wrapper yang bergeser ke kanan saat buku dibuka supaya tetap di tengah */}
-						<motion.div className="relative w-[150px] md:w-[300px] h-full" animate={{ x: currentPage === 0 ? 0 : "50%" }} transition={{ duration: 0.8, ease: "easeInOut" }}>
-							{bookSheets.map((sheet, index) => {
-								const isFlipped = currentPage > index;
-								const zIndex = isFlipped ? index : bookSheets.length - index;
+						{/* Container Utama Buku */}
+						<div className="relative w-[300px] md:w-[600px] h-[220px] md:h-[400px] flex justify-center items-center" style={{ perspective: "1500px" }}>
+							{/* Wrapper yang bergeser ke kanan saat buku dibuka supaya tetap di tengah */}
+							<motion.div className="relative w-[150px] md:w-[300px] h-full" animate={{ x: currentPage === 0 ? 0 : "50%" }} transition={{ duration: 0.8, ease: "easeInOut" }}>
+								{bookSheets.map((sheet, index) => {
+									const isFlipped = currentPage > index;
+									const zIndex = isFlipped ? index : bookSheets.length - index;
 
-								return (
-									<motion.div
-										key={sheet.id}
-										className="absolute top-0 left-0 w-full h-full origin-left cursor-pointer"
-										style={{ transformStyle: "preserve-3d", zIndex: zIndex }}
-										animate={{ rotateY: isFlipped ? -180 : 0, z: isFlipped ? index : -index }}
-										transition={{ duration: 0.8, ease: "easeInOut" }}
-										onClick={() => {
-											if (isFlipped) setCurrentPage(index);
-											else setCurrentPage(index + 1);
-										}}
-									>
-										{/* Bagian Depan Halaman */}
-										<div
-											style={{ backfaceVisibility: "hidden" }}
-											className={`absolute inset-0 bg-white rounded-r-lg overflow-hidden flex flex-col
-                                                ${currentPage === 0 && index === 0 ? "shadow-[10px_10px_20px_rgba(0,0,0,0.5)]" : "shadow-[2px_0_5px_rgba(0,0,0,0.1)]"}`}
+									return (
+										<motion.div
+											key={sheet.id}
+											className="absolute top-0 left-0 w-full h-full origin-left cursor-pointer"
+											style={{ transformStyle: "preserve-3d", zIndex: zIndex }}
+											animate={{ rotateY: isFlipped ? -180 : 0, z: isFlipped ? index : -index }}
+											transition={{ duration: 0.8, ease: "easeInOut" }}
+											onClick={() => {
+												if (isFlipped) setCurrentPage(index);
+												else setCurrentPage(index + 1);
+											}}
 										>
-											<RenderPage data={sheet.front} />
-										</div>
+											{/* Bagian Depan Halaman */}
+											<div
+												style={{ backfaceVisibility: "hidden" }}
+												className={`absolute inset-0 bg-white rounded-r-lg overflow-hidden flex flex-col
+                                                ${currentPage === 0 && index === 0 ? "shadow-[10px_10px_20px_rgba(0,0,0,0.5)]" : "shadow-[2px_0_5px_rgba(0,0,0,0.1)]"}`}
+											>
+												<RenderPage data={sheet.front} />
+											</div>
 
-										{/* Bagian Belakang Halaman */}
-										<div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }} className="absolute inset-0 bg-white rounded-l-lg shadow-[-2px_0_5px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col">
-											<RenderPage data={sheet.back} />
-										</div>
-									</motion.div>
-								);
-							})}
+											{/* Bagian Belakang Halaman */}
+											<div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }} className="absolute inset-0 bg-white rounded-l-lg shadow-[-2px_0_5px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col">
+												<RenderPage data={sheet.back} />
+											</div>
+										</motion.div>
+									);
+								})}
+							</motion.div>
+						</div>
+
+						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-16 flex gap-2 items-center text-slate-400 text-sm bg-slate-800/50 px-4 py-2 rounded-full">
+							<span>Klik halaman buku untuk membaliknya</span>
 						</motion.div>
-					</div>
+					</section>
+				</>
+			)}
+			{isBlownOut && (
+				<section className="relative min-h-[60vh] bg-slate-950 flex flex-col items-center justify-center py-20 z-10 border-t border-slate-800/50">
+					<motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
+						<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsLetterOpen(true)} className="cursor-pointer group relative flex flex-col items-center">
+							{/* Desain Amplop */}
+							<div className="w-64 h-40 bg-rose-200 rounded-md relative shadow-lg overflow-hidden flex items-center justify-center">
+								{/* Tutup amplop atas (berotasi saat hover) */}
+								<div className="absolute top-0 left-0 w-0 h-0 border-t-[80px] border-t-rose-300 border-l-[128px] border-l-transparent border-r-[128px] border-r-transparent z-20 origin-top transition-transform duration-500 group-hover:-translate-y-56"></div>
+								{/* Bagian bawah amplop */}
+								<div className="absolute bottom-0 left-0 w-0 h-0 border-b-[80px] border-b-rose-100 border-l-[128px] border-l-transparent border-r-[128px] border-r-transparent z-10"></div>
+								{/* Sisi kiri amplop */}
+								<div className="absolute top-0 left-0 w-0 h-0 border-l-[128px] border-l-rose-100/50 border-t-[80px] border-t-transparent border-b-[80px] border-b-transparent z-10"></div>
+								{/* Sisi kanan amplop */}
+								<div className="absolute top-0 right-0 w-0 h-0 border-r-[128px] border-r-rose-100/50 border-t-[80px] border-t-transparent border-b-[80px] border-b-transparent z-10"></div>
 
-					<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-16 flex gap-2 items-center text-slate-400 text-sm bg-slate-800/50 px-4 py-2 rounded-full">
-						<span>Klik halaman buku untuk membaliknya</span>
+								{/* Kertas surat yang mengintip saat di-hover */}
+								<div className="w-[85%] h-[90%] bg-[#fdfbf7] absolute bottom-0 transition-transform duration-500 group-hover:-translate-y-6 flex items-start justify-center pt-3 shadow-inner z-0">
+									<span className="text-rose-800  text-sm border-b border-rose-200 pb-1">Untuk: Shinta💞</span>
+								</div>
+
+								{/* Stempel Love */}
+								<div className="w-10 h-10 bg-red-600 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 shadow-sm flex items-center justify-center group-hover:opacity-0 transition-opacity duration-300">
+									<span className="text-white text-sm ">❤</span>
+								</div>
+							</div>
+							<p className="mt-8 text-slate-300  animate-pulse text-lg">Satu pesan buat kamu</p>
+						</motion.div>
 					</motion.div>
 				</section>
 			)}
+
+			{/* Modal Surat Full Screen */}
+			<AnimatePresence>
+				{isLetterOpen && (
+					<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
+						{/* Overlay latar belakang gelap */}
+						<motion.div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsLetterOpen(false)} />
+
+						{/* Konten Kertas Surat */}
+						<motion.div
+							initial={{ scale: 0.8, y: 100, rotate: -5 }}
+							animate={{ scale: 1, y: 0, rotate: 0 }}
+							exit={{ scale: 0.8, y: 100, rotate: 5, opacity: 0 }}
+							transition={{ type: "spring", damping: 20, stiffness: 100 }}
+							className="relative w-full max-w-3xl max-h-[90vh] bg-[#fdfbf7] rounded-sm shadow-2xl overflow-y-auto z-10 p-8 md:p-14"
+							style={{
+								backgroundImage: "linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px)",
+								backgroundSize: "100% 2.5rem",
+								backgroundPositionY: "3.5rem",
+							}}
+						>
+							<button
+								onClick={() => setIsLetterOpen(false)}
+								className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 flex items-center justify-center rounded-full bg-slate-200/50 text-slate-600 hover:bg-rose-100 hover:text-rose-600 transition-colors z-20"
+							>
+								<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+
+							<div className=" text-slate-800 max-w-2xl mx-auto mt-2">
+								<h2 className="text-3xl md:text-5xl font-bold text-rose-900 mb-8 italic">Untuk: Shinta 💞</h2>
+
+								<div className="space-y-8 text-base md:text-xl leading-[2.5rem] md:leading-[2.5rem]">
+									<p>
+										Hai, selamat ulang tahun sayang. Ga kerasa ya, aku dah nemenin kamu dari tahun lalu waktu baru 17 tahun sampai sekarang udah 18 tahun. Seneng rasanya bisa berproses bareng kamu & membersamai kamu
+										setahun ke belakang, dan aku harap bisa membersamai kamu terus di tahun-tahun berikutnya.
+									</p>
+									<p>
+										Kamu udah jadi makin dewasa ya, sedikit spill dari aku, umur 18 nanti bakal banyak banget gebrakannya, but i believe you can get through it sayang. Kamu butuh ruang cerita, bisa bilang ke aku sebagai
+										someone to talk nya kamu ^^, or anything random story you wanna tell to me.
+									</p>
+									<p>
+										Aku doain semoga kamu lolos SNBP nanti, kalo engga masih ada SNBT dan aku berdoa semoga Allah ga nyia-nyiain perjuangan kamu selama ini. Aku doain juga semoga kamu selalu diberi kesehatan, kekuatan,
+										kemudahan, dan kebahagiaan. Intinya, aku doain semua yang terbaik buat kamu, dan minta supaya cita-cita kamu selama ini bisa dimudahkan.
+									</p>
+									<p>
+										Tetep jadi gadis yang baik ya, baik bagi orangtua, keluarga, teman, dan orang-orang sekitar kamu. Aku juga minta maaf buat semua kesalahan yang banyak aku lakuin ke kamu, dan terimakasih karena sudah
+										mau bertahan selama ini.
+									</p>
+									<p>
+										Terakhir, aku mau bilang, kalau aku bangga bisa sama kamu, aku seneng, & aku bersyukur, bersyukur banget bisa ketemu orang sebaik & secantik kamu. Semoga kita bisa tetep bareng ya. Aku sayang kamu,
+										selalu, dan kamu, tetep sayang aku juga ya.. ^^
+									</p>
+									<p>
+										Terimakasih udah baca surat ini sampai akhir, aku harap tahun ini & seterusnya kamu dilimpahi kemudahan & kelapangan ya, aku yakin kalo tahun ini bakal jadi tahunnya kamu. Thank you sayang, wish you
+										all the best ❤️
+									</p>
+									<p className="pt-8 text-right italic text-rose-800 font-bold">
+										With love
+										<br />
+										Pacarnya kamu: Farel
+									</p>
+								</div>
+							</div>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 }
